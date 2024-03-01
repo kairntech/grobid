@@ -13,10 +13,6 @@ buildscript {
     }
 }
 
-plugins {
-    id 'org.datlowe.maven-publish-auth' version '2.0.2'
-}
-
 repositories {
     mavenLocal()
     mavenCentral()
@@ -57,11 +53,13 @@ subprojects {
         repositories {
             mavenLocal()
             maven {
-                //if (project.version.endsWith('-SNAPSHOT')) {
-                url "http://51.38.230.236:8081/artifactory/libs-snapshot-local/"
-                // } else {
-                //     url "http://51.38.230.236:8081/artifactory/libs-release-local/"
-                // }
+                if (project.version.endsWith('-SNAPSHOT')) {
+                    url "http://51.38.230.236:8081/artifactory/libs-snapshot-local/"
+                } else {
+                    url "http://51.38.230.236:8081/artifactory/libs-release-local/"
+                }
+                name = 'artifactory'
+                credentials(PasswordCredentials)
                 setAllowInsecureProtocol(true)
                 metadataSources {
                     mavenPom()
@@ -78,7 +76,6 @@ subprojects {
             // }
         }
     }
-    apply plugin: 'org.datlowe.maven-publish-auth'
     sourceCompatibility = 1.11
     targetCompatibility = 1.11
 

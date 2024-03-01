@@ -21,7 +21,7 @@ pipeline {
         }
       }
     }
-    stage('Generate new version') {
+    stage('Build and publish') {
       when {
         environment name: 'SKIP_JOB', value: '0'
       }
@@ -30,21 +30,24 @@ pipeline {
           steps {
             println 'Building grobid'
             script {
-              sh 'gradle clean build'
+              sh 'gradle clean build -x test'
             }
           }
         }
         stage('Test grobid') {
           steps {
             script {
-              sh 'gradle test'
+              sh 'gradle build'
             }
           }
         }
         stage('Publish grobid') {
           steps {
-            script {
-              sh 'gradle publish'
+            withCredentials([usernamePassword(credentialsId: 'jenkins-artifactory', passwordVariable: 'ORG_GRADLE_PROJECT_artifactoryPassword', usernameVariable: 'ORG_GRADLE_PROJECT_artifactoryUsername')]) {
+              env.
+              script {
+                sh 'gradle publish'
+              }
             }
           }
         }
