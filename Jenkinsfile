@@ -44,7 +44,6 @@ pipeline {
         stage('Publish grobid') {
           steps {
             withCredentials([usernamePassword(credentialsId: 'jenkins-artifactory', passwordVariable: 'ORG_GRADLE_PROJECT_artifactoryPassword', usernameVariable: 'ORG_GRADLE_PROJECT_artifactoryUsername')]) {
-              env.
               script {
                 sh 'gradle publish'
               }
