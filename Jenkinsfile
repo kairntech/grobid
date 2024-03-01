@@ -30,14 +30,21 @@ pipeline {
           steps {
             println 'Building grobid'
             script {
-              sh './gradlew clean install'
+              sh 'gradle clean build'
             }
           }
         }
         stage('Test grobid') {
           steps {
             script {
-              sh './gradlew test'
+              sh 'gradle test'
+            }
+          }
+        }
+        stage('Publish grobid') {
+          steps {
+            script {
+              sh 'gradle publish'
             }
           }
         }
@@ -101,6 +108,7 @@ pipeline {
   }
 
   tools {
+    jdk 'JDK-1.11'
     gradle 'GRADLE-7.2'
   }
 }

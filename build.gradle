@@ -52,6 +52,26 @@ subprojects {
         }
         repositories {
             mavenLocal()
+            maven {
+                if (project.version.endsWith('-SNAPSHOT')) {
+                    url "http://51.38.230.236:8081/artifactory/libs-snapshot-local/"
+                } else {
+                    url "http://51.38.230.236:8081/artifactory/libs-release-local/"
+                }
+                setAllowInsecureProtocol(true)
+                metadataSources {
+                    mavenPom()
+                    ignoreGradleMetadataRedirection()
+                }
+            }
+            // maven {
+            //     url "http://51.38.230.236:8081/artifactory/libs-release-local/"
+            //     setAllowInsecureProtocol(true)
+            //     metadataSources {
+            //         mavenPom()
+            //         ignoreGradleMetadataRedirection()
+            //     }
+            // }
         }
     }
 
