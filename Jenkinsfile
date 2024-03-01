@@ -21,35 +21,22 @@ pipeline {
         }
       }
     }
-    stage('Nothing') {
-      when {
-        environment name: 'SKIP_JOB', value: '0'
+    stage('Build grobid') {
+      steps {
+        println 'Building grobid'
+        script {
+          sh 'gradle clean build'
+        }
       }
-      stages {
-        stage('Build grobid') {
-          steps {
-            println 'Building grobid'
-            script {
-              sh 'gradle clean build -x test'
-            }
-          }
-        }
-        stage('Test grobid') {
-          steps {
-            script {
-              sh 'gradle build'
-            }
-          }
-        }
-        stage('Publish grobid') {
-          steps {
-            withCredentials([usernamePassword(credentialsId: 'jenkins-artifactory', passwordVariable: 'artifactoryPassword', usernameVariable: 'artifactoryUsername')]) {
-              script {
-                sh 'ORG_GRADLE_PROJECT_artifactoryPassword="${artifactoryPassword}" ORG_GRADLE_PROJECT_artifactoryUsername=${artifactoryUsername} gradle publish'
-              }
-            }
-          }
-        }
+    }
+    stage('Publish grobid') {
+      steps {
+        sh 'gradle publishToMavenLocal'
+        // withCredentials([usernamePassword(credentialsId: 'jenkins-artifactory', passwordVariable: 'artifactoryPassword', usernameVariable: 'artifactoryUsername')]) {
+        //   script {
+        //     sh 'ORG_GRADLE_PROJECT_artifactoryPassword="${artifactoryPassword}" ORG_GRADLE_PROJECT_artifactoryUsername=${artifactoryUsername} gradle publish'
+        //   }
+        // }
       }
     }
   }
@@ -182,4 +169,9 @@ def analyseBuildCause() {
     switchEmailNotif(true, BUILD_NUMBER)
     println 'Job started by Branch Discovery, proceeding'
   }
+  // if you want to stop the build without relying on when conditions based on env.SKIP_JOB 
+  // currentBuild.result = 'NOT_BUILT'
+  // currentBuild.getRawBuild().getExecutor().interrupt(Result.NOT_BUILT)
+  // sleep(2)
+
 }
