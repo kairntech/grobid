@@ -13,6 +13,10 @@ buildscript {
     }
 }
 
+plugins {
+    id 'org.datlowe.maven-publish-auth' version '2.0.2'
+}
+
 repositories {
     mavenLocal()
     mavenCentral()
