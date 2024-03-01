@@ -46,7 +46,6 @@ allprojects {
 subprojects {
     apply plugin: 'java'
     apply plugin: 'maven-publish'
-    apply plugin: 'org.datlowe.maven-publish-auth'
 
     publishing {
         publications {
@@ -79,7 +78,7 @@ subprojects {
             // }
         }
     }
-
+    apply plugin: 'org.datlowe.maven-publish-auth'
     sourceCompatibility = 1.11
     targetCompatibility = 1.11
 
