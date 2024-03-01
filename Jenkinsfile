@@ -21,7 +21,7 @@ pipeline {
         }
       }
     }
-    stage('Build and publish') {
+    stage('Nothing') {
       when {
         environment name: 'SKIP_JOB', value: '0'
       }
@@ -43,9 +43,9 @@ pipeline {
         }
         stage('Publish grobid') {
           steps {
-            withCredentials([usernamePassword(credentialsId: 'jenkins-artifactory', passwordVariable: 'ORG_GRADLE_PROJECT_artifactoryPassword', usernameVariable: 'ORG_GRADLE_PROJECT_artifactoryUsername')]) {
+            withCredentials([usernamePassword(credentialsId: 'jenkins-artifactory', passwordVariable: 'artifactoryPassword', usernameVariable: 'artifactoryUsername')]) {
               script {
-                sh 'gradle publish'
+                sh 'ORG_GRADLE_PROJECT_artifactoryPassword="${artifactoryPassword}" ORG_GRADLE_PROJECT_artifactoryUsername=${artifactoryUsername} gradle publish'
               }
             }
           }
