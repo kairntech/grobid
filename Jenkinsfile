@@ -29,14 +29,22 @@ pipeline {
         }
       }
     }
-    stage('Publish grobid') {
+    stage('Publish grobid -local-') {
       steps {
-        sh 'gradle publishToMavenLocal'
-        // withCredentials([usernamePassword(credentialsId: 'jenkins-artifactory', passwordVariable: 'artifactoryPassword', usernameVariable: 'artifactoryUsername')]) {
-        //   script {
-        //     sh 'ORG_GRADLE_PROJECT_artifactoryPassword="${artifactoryPassword}" ORG_GRADLE_PROJECT_artifactoryUsername=${artifactoryUsername} gradle publish'
-        //   }
-        // }
+        println 'Publish grobid on local maven repository'
+        script {
+          sh 'gradle clean publishToMavenLocal'
+        }
+      }
+    }
+    stage('Publish grobid -remote-') {
+      steps {
+        println 'Publish grobid on JFrog remote maven repository'
+        script {
+          withCredentials([usernamePassword(credentialsId: 'jenkins-artifactory', passwordVariable: 'artifactoryPassword', usernameVariable: 'artifactoryUsername')]) {
+            sh 'ORG_GRADLE_PROJECT_artifactoryPassword="${artifactoryPassword}" ORG_GRADLE_PROJECT_artifactoryUsername=${artifactoryUsername} gradle publish'
+          }
+        }
       }
     }
   }
